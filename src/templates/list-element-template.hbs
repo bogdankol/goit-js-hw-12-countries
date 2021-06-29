@@ -1,0 +1,31 @@
+<h2 class="oneElTitle">{{name}}</h2>
+<div class="inner-div js-inner-div">
+    <ul class="country js-country">
+       <li><b>Capital:</b> {{capital}}</li>
+        <li><b>Population:</b> {{population}}</li>
+        <li><b>Languages:</b>
+            <ul class="country-inner js-country-inner">  
+                {{#each languages}}
+                 <li class="inner-li">{{this.name}}</li>
+                {{/each}}
+            </ul>
+        </li> 
+    </ul>
+    <img src={{flag}} class="img">
+    
+</div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
