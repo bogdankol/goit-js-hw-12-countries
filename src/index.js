@@ -25,61 +25,75 @@ const refs = {
 refs.input.addEventListener('input', debounce(onInputHandler, 500))
 
 function onInputHandler() {
-    const inputValue = refs.input.value;
-    if (inputValue) {
-        fetchCountries(inputValue).then(result => {
-            if (result.length === 1) {
-                refs.div.innerHTML = '';
-                refs.div.insertAdjacentHTML('beforeend', templateForOne(result[0]));
+  const inputValue = refs.input.value;
+  const array = inputValue.split('').every(el => isNaN(el));
 
-                success({
-                  text: "Success!",
-                  animation: 'fade',
-                  shadow: true,
-                  delay: 2000,
-                  closer: true,
-                });
-                
-            } else if (result.length > 1 && result.length <=10) {
-                refs.div.innerHTML = '';
-                
-                const filtered = result.map(el => el.name.includes(refs.input.value));
-                refs.div.insertAdjacentHTML('beforeend', templateForMany(result.splice(0, 9)));
+  array ? null : error({
+        text: 'Please, do not use numbers in your request',
+        animation: 'fade',
+        shadow: true,
+        delay: 1500,
+        closer: true,
+      });
+  
+    if (isNaN(inputValue)) {
+      fetchCountries(inputValue).then(result => {
 
-                info({
-                  text: "Here are the matches! Please enter one of them in search field to get more specific data",
-                  animation: 'fade',
-                  shadow: true,
-                  delay: 3000,
-                  closer: true,
-                });
+        if (result.length === 1) {
+          refs.div.innerHTML = '';
+          refs.div.insertAdjacentHTML('beforeend', templateForOne(result[0]));
 
-            } else if (result.length >  10) {
-                refs.div.innerHTML = '';
-                
-              info({
-                text: 'Too much matches, please enter more specific text',
-                animation: 'fade',
-                shadow: true,
-                delay: 2000,
-                closer: true,
-              });
-                
-            } else {
-                refs.div.innerHTML = '';
-                
-              error({
-                text: 'No matches. Please, enter other data',
-                animation: 'fade',
-                shadow: true,
-                delay: 3000,
-                closer: true,
-              });
-                
-            }
-        })
+          success({
+            text: 'Success!',
+            animation: 'fade',
+            shadow: true,
+            delay: 1500,
+            closer: true,
+          });
 
-    }
+          if (success) {
+            refs.input.value = '';
+          }
+
+        } else if (result.length > 1 && result.length <= 10) {
+          refs.div.innerHTML = '';
+
+          const filtered = result.map(el => el.name.includes(refs.input.value));
+          refs.div.insertAdjacentHTML('beforeend', templateForMany(result.splice(0, 9)));
+
+          info({
+            text: 'Here are the matches! Please enter one of them in search field to get more specific data',
+            animation: 'fade',
+            shadow: true,
+            delay: 1500,
+            closer: true,
+          });
+
+        } else if (result.length > 10) {
+          refs.div.innerHTML = '';
+
+          info({
+            text: 'Too much matches, please enter more specific text',
+            animation: 'fade',
+            shadow: true,
+            delay: 1500,
+            closer: true,
+          });
+
+        } else if (result.length === 0) {
+          refs.div.innerHTML = '';
+
+          error({
+            text: 'No matches. Please, enter other data',
+            animation: 'fade',
+            shadow: true,
+            delay: 1500,
+            closer: true,
+          });
+
+        } 
+      });
+    } 
 }
 
 
